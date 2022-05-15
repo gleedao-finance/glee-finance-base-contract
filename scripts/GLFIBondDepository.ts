@@ -7,38 +7,41 @@ import { constants } from "./constants";
 // yours, or create new ones.
 async function main() {
   // This is just a convenience check
-  if (network.name === 'hardhat') {
+  if (network.name === "hardhat") {
     console.warn(
-      'You are trying to deploy a contract to the Hardhat Network, which' +
-      'gets automatically created and destroyed every time. Use the Hardhat' +
-      " option '--network localhost'"
-    )
+      "You are trying to deploy a contract to the Hardhat Network, which" +
+        "gets automatically created and destroyed every time. Use the Hardhat" +
+        " option '--network localhost'"
+    );
   }
 
-  const [deployer, MockDao] = await ethers.getSigners()
+  const [deployer, MockDao] = await ethers.getSigners();
 
-  const glfiTreasuryAddress = readContractAddress('/GLFITreasury.json')
-  const mimAddress = readContractAddress('/MIMToken.json')
-  const glfiAddress = readContractAddress('/GLFI.json')
+  const glfiTreasuryAddress = readContractAddress("/GLFITreasury.json");
+  const mimAddress = readContractAddress("/MIMToken.json");
+  const glfiAddress = readContractAddress("/GLFI.json");
 
-  const GLFIBondDepository = await ethers.getContractFactory('GLFIBondDepository')
-  const glfiBondDepository = await GLFIBondDepository
-                                  .deploy(glfiAddress,
-                                          mimAddress,
-                                          glfiTreasuryAddress,
-                                          MockDao.address,
-                                          constants.zeroAddress)
-  await glfiBondDepository.deployed()
+  const GLFIBondDepository = await ethers.getContractFactory(
+    "GLFIBondDepository"
+  );
+  const glfiBondDepository = await GLFIBondDepository.deploy(
+    glfiAddress,
+    mimAddress,
+    glfiTreasuryAddress,
+    MockDao.address,
+    constants.zeroAddress
+  );
+  await glfiBondDepository.deployed();
 
-  console.log('Token address:', glfiBondDepository.address)
+  console.log("Token address:", glfiBondDepository.address);
 
   // We also save the contract's artifacts and address in the frontend directory
-  saveFrontendFiles(glfiBondDepository, 'GLFIBondDepository')
+  saveFrontendFiles(glfiBondDepository, "GLFIBondDepository");
 }
 
 main()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error(error)
-    process.exit(1)
-  })
+    console.error(error);
+    process.exit(1);
+  });
