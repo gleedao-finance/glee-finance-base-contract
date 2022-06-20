@@ -1,6 +1,6 @@
 // @ts-ignore
 import { artifacts, ethers, network } from "hardhat";
-import { readContractAddress } from "./helpers";
+import { readContractAddress, saveFrontendFiles } from "./helpers";
 import "./constants";
 
 const distributorAdd = readContractAddress("/Distributor.json");
@@ -52,17 +52,22 @@ async function main() {
   const MIMToken = await ethers.getContractFactory("MIMToken");
   const mim = await MIMToken.attach(mimAdd);
 
-  // const MIMFaucet = await ethers.getContractFactory('MIMFAUCET')
-  // const mimFaucet = await MIMFaucet.deploy(mimAdd)
-  // await mimFaucet.deployed()
+  const MIMFaucet = await ethers.getContractFactory('MIMFaucet')
+  const mimFaucet = await MIMFaucet.deploy(mimAdd)
+  await mimFaucet.deployed()
+
+  console.log("Token address of glfiFaucet:", mimFaucet.address);
+
+  // We also save the contract's artifacts and address in the frontend directory
+  saveFrontendFiles(mimFaucet, "MIMFaucet");
 
   // console.log("contracts are attached to their ABIs");
   // console.log("total glfi supply Debt", await glfi.totalSupply());
   // console.log(await mimBond.totalDebt());
 
 
-  const txn = await mim.approve(mimBond.address, ethers.constants.MaxUint256);
-  console.log(txn);
+  // const txn = await mim.approve(mimBond.address, ethers.constants.MaxUint256);
+  // console.log(txn);
 
   // for(let i=1; i< 30; i++){
   //   const rebaseTxn = await staking.rebase();
